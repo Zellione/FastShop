@@ -12,11 +12,7 @@ namespace http
           m_httpProtocol(),
           m_path(),
           m_headers(),
-          m_body(),
-          m_regexFirstLine("^(GET|POST|PUT|DELETE) (/.*) (HTTP/1.1)"),
-          m_regexHost("^(Host): (\\d+.\\d+.\\d+.\\d+):(\\d+)"),
-          m_regexHeader("^(.*): (.*)"),
-          m_regexBody("^\r\n$")
+          m_body()
     {
         parseHttpRequest(request);
     }
@@ -41,12 +37,13 @@ namespace http
         // Collect headers from request
         while (std::getline(ss, line))
         {
-            if (line.empty() || line == "\r\n\r\n")
+            line.erase(line.size() - 1);
+            if (line.empty())
                 break;
 
             size_t seperator = line.find(":");
             std::string key = line.substr(0, seperator);
-            std::string value = line.substr(seperator + 2, line.size() - key.size() - 4);
+            std::string value = line.substr(seperator + 2, line.size() - key.size() - 2);
 
             m_headers[key] = value;
         }

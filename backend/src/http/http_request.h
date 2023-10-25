@@ -21,11 +21,6 @@ namespace http
             std::map<std::string, std::string> m_headers;
             std::string m_body;
 
-            std::regex m_regexFirstLine;
-            std::regex m_regexHost;
-            std::regex m_regexHeader;
-            std::regex m_regexBody;
-
         private:
             void parseHttpRequest(const char* request);
     };
