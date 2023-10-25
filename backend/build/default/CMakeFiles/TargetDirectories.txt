@@ -1,3 +1,0 @@
-/home/zellione/projects/shop/backend/build/default/CMakeFiles/FastShop.dir
-/home/zellione/projects/shop/backend/build/default/CMakeFiles/edit_cache.dir
-/home/zellione/projects/shop/backend/build/default/CMakeFiles/rebuild_cache.dir
