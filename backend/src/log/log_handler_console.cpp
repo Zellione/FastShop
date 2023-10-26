@@ -14,4 +14,4 @@ namespace logging
     {
         std::cout << message << std::endl;
     }
-}
+} // namespace logging

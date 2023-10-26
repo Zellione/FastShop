@@ -46,4 +46,4 @@ namespace logging
 
         m_handler->log(LOGLEVEL_DEBUG, message);
     }
-}
+} // namespace logging

@@ -7,11 +7,11 @@ namespace logging
 {
     class LogHandlerConsole : public LogHandler
     {
-        public:
-            LogHandlerConsole();
-            ~LogHandlerConsole() override;
-            LogHandlerConsole(LogHandlerConsole &other) = delete;
+      public:
+        LogHandlerConsole();
+        ~LogHandlerConsole() override;
+        LogHandlerConsole(LogHandlerConsole& other) = delete;
 
-            void log(const int level, const char* message) const override;
+        void log(const int level, const char* message) const override;
     };
-}
+} // namespace logging

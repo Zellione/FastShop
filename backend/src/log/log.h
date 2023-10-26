@@ -14,18 +14,18 @@ namespace logging
 
     class Log
     {
-        public:
-            Log(LogHandler* handler, LogLevel level);
-            ~Log();
-            Log(Log &other) = delete;
+      public:
+        Log(LogHandler* handler, LogLevel level);
+        ~Log();
+        Log(Log& other) = delete;
 
-            void error(const char* message) const;
-            void warn(const char* message) const;
-            void log(const char* message) const;
-            void debug(const char* message) const;
+        void error(const char* message) const;
+        void warn(const char* message) const;
+        void log(const char* message) const;
+        void debug(const char* message) const;
 
-        private:
-            LogHandler* m_handler;
-            LogLevel m_level;
+      private:
+        LogHandler* m_handler;
+        LogLevel m_level;
     };
-}
+} // namespace logging

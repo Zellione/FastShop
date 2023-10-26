@@ -14,17 +14,17 @@ namespace
 {
     const int BUFFER_SIZE = 30720;
 
-    void dolog(const std::string &message)
+    void dolog(const std::string& message)
     {
         std::cout << message << std::endl;
     }
 
-    void exitWithError(const std::string &errorMessage)
+    void exitWithError(const std::string& errorMessage)
     {
         dolog("ERROR: " + errorMessage);
         exit(1);
     }
-}
+} // namespace
 
 namespace http
 {
@@ -67,7 +67,7 @@ namespace http
             return 1;
         }
 
-        if (bind(m_socket, (sockaddr *)&m_socketAddress, m_socketAddressLength) < 0)
+        if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddressLength) < 0)
         {
             exitWithError("Cannot connect socket to address");
             return 1;
@@ -78,10 +78,10 @@ namespace http
 
     std::string TcpServer::buildResponse()
     {
-        std::string htmlFile = "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p></body></html>";
+        std::string htmlFile =
+            "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p></body></html>";
         std::ostringstream ss;
-        ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n"
-           << htmlFile;
+        ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n" << htmlFile;
 
         return ss.str();
     }
@@ -95,25 +95,26 @@ namespace http
 
     void TcpServer::startListen()
     {
-        if(listen(m_socket, 20) < 0)
+        if (listen(m_socket, 20) < 0)
         {
             exitWithError("socket listen failed");
         }
 
         std::ostringstream ss;
-        ss << "\n*** Listening on ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr) << " PORT: " << ntohs(m_socketAddress.sin_port) <<" ***\n\n";
+        ss << "\n*** Listening on ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr)
+           << " PORT: " << ntohs(m_socketAddress.sin_port) << " ***\n\n";
         m_logger->log(ss.str().c_str());
 
         int bytesReceived;
 
-        while(true)
+        while (true)
         {
             m_logger->log("====== Waiting for a new connection ====== \n\n\n");
             acceptConnection(m_newSocket);
 
             char buffer[BUFFER_SIZE] = {0};
             bytesReceived = read(m_newSocket, buffer, BUFFER_SIZE);
-            if(bytesReceived < 0)
+            if (bytesReceived < 0)
             {
                 exitWithError("Failed to read bytes from client  socket connection");
             }
@@ -131,13 +132,14 @@ namespace http
         }
     }
 
-    void TcpServer::acceptConnection(int &newSocket)
+    void TcpServer::acceptConnection(int& newSocket)
     {
-        newSocket = accept(m_socket, (sockaddr *)&m_socketAddress, &m_socketAddressLength);
+        newSocket = accept(m_socket, (sockaddr*)&m_socketAddress, &m_socketAddressLength);
         if (newSocket < 0)
         {
             std::ostringstream ss;
-            ss << "Server failed to accept incoming connection from ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr) << "; PORT: " << ntohs(m_socketAddress.sin_port);
+            ss << "Server failed to accept incoming connection from ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr)
+               << "; PORT: " << ntohs(m_socketAddress.sin_port);
             exitWithError(ss.str());
         }
     }
@@ -157,4 +159,4 @@ namespace http
             m_logger->error("Error sending response to client");
         }
     }
-}
+} // namespace http
