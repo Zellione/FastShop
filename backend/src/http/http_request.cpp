@@ -49,7 +49,7 @@ namespace http
         }
 
         // Collect body from request
-        while(std::getline(ss, line))
+        while (std::getline(ss, line))
         {
             m_body += line;
         }
@@ -59,4 +59,4 @@ namespace http
     {
         return &m_body;
     }
-}
+} // namespace http
