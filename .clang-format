@@ -3,11 +3,11 @@ Language:        Cpp
 # BasedOnStyle:  Microsoft
 AccessModifierOffset: -2
 AlignAfterOpenBracket: Align
-AlignArrayOfStructures: None
+AlignArrayOfStructures: Left
 AlignConsecutiveAssignments:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
+  Enabled:         true
+  AcrossEmptyLines: true
+  AcrossComments:  true
   AlignCompound:   false
   PadOperators:    true
 AlignConsecutiveBitFields:

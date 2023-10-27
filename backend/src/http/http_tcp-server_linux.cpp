@@ -1,4 +1,5 @@
 #include "http_tcp-server_linux.h"
+#include "http_common.h"
 #include "http_request.h"
 
 #include <arpa/inet.h>
@@ -9,21 +10,22 @@
 #include <unistd.h>
 
 #include "../log/log_handler_console.h"
+#include "http_response.h"
 
 namespace
 {
     const int BUFFER_SIZE = 30720;
 
-    void dolog(const std::string& message)
-    {
-        std::cout << message << std::endl;
-    }
+    /* void dolog(const std::string& message) */
+    /* { */
+    /*     std::cout << message << std::endl; */
+    /* } */
 
-    void exitWithError(const std::string& errorMessage)
-    {
-        dolog("ERROR: " + errorMessage);
-        exit(1);
-    }
+    /* void exitWithError(const std::string& errorMessage) */
+    /* { */
+    /*     dolog("ERROR: " + errorMessage); */
+    /*     exit(1); */
+    /* } */
 } // namespace
 
 namespace http
@@ -39,8 +41,8 @@ namespace http
           m_serverMessage(buildResponse()),
           m_logger(new logging::Log(new logging::LogHandlerConsole(), logging::LOGLEVEL_DEBUG))
     {
-        m_socketAddress.sin_family = AF_INET;
-        m_socketAddress.sin_port = htons(m_port);
+        m_socketAddress.sin_family      = AF_INET;
+        m_socketAddress.sin_port        = htons(m_port);
         m_socketAddress.sin_addr.s_addr = inet_addr(m_ipAddress.c_str());
 
         if (startServer() != 0)
@@ -63,13 +65,13 @@ namespace http
         m_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (m_socket < 0)
         {
-            exitWithError("Cannot create socket");
+            m_logger->error("Cannot create socket");
             return 1;
         }
 
         if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddressLength) < 0)
         {
-            exitWithError("Cannot connect socket to address");
+            m_logger->error("Cannot connect socket to address");
             return 1;
         }
 
@@ -78,12 +80,18 @@ namespace http
 
     std::string TcpServer::buildResponse()
     {
+        http::HttpResponse response;
         std::string htmlFile =
             "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p></body></html>";
-        std::ostringstream ss;
-        ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n" << htmlFile;
+        response.setBody(htmlFile)
+            ->setCode(http::Code::OK)
+            ->setProtocol(http::HTTP_VERSION_1_1)
+            ->addHeader("Content-Type", "text/html");
+        /* std::ostringstream ss; */
+        /* ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n" << htmlFile;
+         */
 
-        return ss.str();
+        return response.toString();
     }
 
     void TcpServer::closeServer()
@@ -97,7 +105,7 @@ namespace http
     {
         if (listen(m_socket, 20) < 0)
         {
-            exitWithError("socket listen failed");
+            m_logger->error("socket listen failed");
         }
 
         std::ostringstream ss;
@@ -113,10 +121,10 @@ namespace http
             acceptConnection(m_newSocket);
 
             char buffer[BUFFER_SIZE] = {0};
-            bytesReceived = read(m_newSocket, buffer, BUFFER_SIZE);
+            bytesReceived            = read(m_newSocket, buffer, BUFFER_SIZE);
             if (bytesReceived < 0)
             {
-                exitWithError("Failed to read bytes from client  socket connection");
+                m_logger->error("Failed to read bytes from client  socket connection");
             }
             http::HttpRequest request = http::HttpRequest(buffer);
             m_logger->debug(request.GetBody()->c_str());
@@ -140,7 +148,7 @@ namespace http
             std::ostringstream ss;
             ss << "Server failed to accept incoming connection from ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr)
                << "; PORT: " << ntohs(m_socketAddress.sin_port);
-            exitWithError(ss.str());
+            m_logger->error(ss.str().c_str());
         }
     }
 
