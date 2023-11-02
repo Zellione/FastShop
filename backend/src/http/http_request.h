@@ -6,22 +6,23 @@
 
 namespace http
 {
-    class HttpRequest
-    {
-      public:
-        HttpRequest(const char *request);
-        ~HttpRequest();
+class HttpRequest
+{
+  public:
+    HttpRequest(const char* request);
+    ~HttpRequest();
 
-        const std::string *GetBody() const;
+    const std::string* GetBody() const;
+    const std::string* GetPath() const;
 
-      private:
-        std::string m_httpMethod;
-        std::string m_httpProtocol;
-        std::string m_path;
-        std::map<std::string, std::string> m_headers;
-        std::string m_body;
+  private:
+    std::string m_httpMethod;
+    std::string m_httpProtocol;
+    std::string m_path;
+    std::map<std::string, std::string> m_headers;
+    std::string m_body;
 
-      private:
-        void parseHttpRequest(const char *request);
-    };
+  private:
+    void parseHttpRequest(const char* request);
+};
 } // namespace http

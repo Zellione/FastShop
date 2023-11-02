@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../log/log.h"
+#include "../service/registry.h"
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +13,7 @@ namespace http
     {
       public:
         TcpServer(std::string ipAddress, int port);
+        TcpServer(const TcpServer& other) = delete;
         ~TcpServer();
         void startListen();
 
@@ -25,7 +26,8 @@ namespace http
         sockaddr_in m_socketAddress;
         unsigned int m_socketAddressLength;
         std::string m_serverMessage;
-        logging::Log* m_logger;
+
+        service::Registry m_registry;
 
       private:
         int startServer();

@@ -1,6 +1,7 @@
 #include "http_tcp-server_linux.h"
 #include "http_common.h"
 #include "http_request.h"
+#include "http_response.h"
 
 #include <arpa/inet.h>
 #include <iostream>
@@ -9,27 +10,12 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "../log/log_handler_console.h"
-#include "http_response.h"
-
-namespace
-{
-    const int BUFFER_SIZE = 30720;
-
-    /* void dolog(const std::string& message) */
-    /* { */
-    /*     std::cout << message << std::endl; */
-    /* } */
-
-    /* void exitWithError(const std::string& errorMessage) */
-    /* { */
-    /*     dolog("ERROR: " + errorMessage); */
-    /*     exit(1); */
-    /* } */
-} // namespace
+#include "../logging/log_handler_console.h"
 
 namespace http
 {
+    const int BUFFER_SIZE = 30720;
+
     TcpServer::TcpServer(std::string ipAddress, int port)
         : m_ipAddress(ipAddress),
           m_port(port),
@@ -39,7 +25,7 @@ namespace http
           m_socketAddress(),
           m_socketAddressLength(sizeof(m_socketAddress)),
           m_serverMessage(buildResponse()),
-          m_logger(new logging::Log(new logging::LogHandlerConsole(), logging::LOGLEVEL_DEBUG))
+          m_registry()
     {
         m_socketAddress.sin_family      = AF_INET;
         m_socketAddress.sin_port        = htons(m_port);
@@ -49,15 +35,14 @@ namespace http
         {
             std::ostringstream ss;
             ss << "Failed to start server with PORT: " << ntohs(m_socketAddress.sin_port);
-            m_logger->error(ss.str().c_str());
+            m_registry.getLogger()->error(ss.str().c_str());
+            exit(1);
         }
     }
 
     TcpServer::~TcpServer()
     {
         closeServer();
-        delete m_logger;
-        m_logger = 0;
     }
 
     int TcpServer::startServer()
@@ -65,13 +50,13 @@ namespace http
         m_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (m_socket < 0)
         {
-            m_logger->error("Cannot create socket");
+            m_registry.getLogger()->error("Cannot create socket");
             return 1;
         }
 
         if (bind(m_socket, (sockaddr*)&m_socketAddress, m_socketAddressLength) < 0)
         {
-            m_logger->error("Cannot connect socket to address");
+            m_registry.getLogger()->error("Cannot connect socket to address");
             return 1;
         }
 
@@ -87,9 +72,6 @@ namespace http
             ->setCode(http::Code::OK)
             ->setProtocol(http::HTTP_VERSION_1_1)
             ->addHeader("Content-Type", "text/html");
-        /* std::ostringstream ss; */
-        /* ss << "HTTP/1.1 200 OK\nContent-Type: text/html\nContent-Length: " << htmlFile.size() << "\n\n" << htmlFile;
-         */
 
         return response.toString();
     }
@@ -105,37 +87,40 @@ namespace http
     {
         if (listen(m_socket, 20) < 0)
         {
-            m_logger->error("socket listen failed");
+            m_registry.getLogger()->error("socket listen failed");
         }
 
         std::ostringstream ss;
         ss << "\n*** Listening on ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr)
            << " PORT: " << ntohs(m_socketAddress.sin_port) << " ***\n\n";
-        m_logger->log(ss.str().c_str());
+        m_registry.getLogger()->log(ss.str().c_str());
 
         int bytesReceived;
 
         while (true)
         {
-            m_logger->log("====== Waiting for a new connection ====== \n\n\n");
+            m_registry.getLogger()->log("====== Waiting for a new connection ====== \n\n\n");
             acceptConnection(m_newSocket);
 
             char buffer[BUFFER_SIZE] = {0};
             bytesReceived            = read(m_newSocket, buffer, BUFFER_SIZE);
             if (bytesReceived < 0)
             {
-                m_logger->error("Failed to read bytes from client  socket connection");
+                m_registry.getLogger()->error("Failed to read bytes from client  socket connection");
             }
-            http::HttpRequest request = http::HttpRequest(buffer);
-            m_logger->debug(request.GetBody()->c_str());
+            http::HttpRequest* request = new http::HttpRequest(buffer);
+            m_registry.getLogger()->debug(request->GetBody()->c_str());
 
             std::ostringstream ss;
             ss << "------ Received request from client ------ \n\n";
-            m_logger->log(ss.str().c_str());
-            m_logger->debug(buffer);
+            m_registry.getLogger()->log(ss.str().c_str());
+            m_registry.getLogger()->debug(buffer);
 
+            http::HttpResponse* response =  m_registry.getRouter()->route(request);
             sendResponse();
 
+            delete request;
+            delete response;
             close(m_newSocket);
         }
     }
@@ -148,7 +133,7 @@ namespace http
             std::ostringstream ss;
             ss << "Server failed to accept incoming connection from ADDRESS: " << inet_ntoa(m_socketAddress.sin_addr)
                << "; PORT: " << ntohs(m_socketAddress.sin_port);
-            m_logger->error(ss.str().c_str());
+            m_registry.getLogger()->error(ss.str().c_str());
         }
     }
 
@@ -160,11 +145,11 @@ namespace http
 
         if (bytesSent == m_serverMessage.size())
         {
-            m_logger->log("------ Server Response sent to client ------\n\n");
+            m_registry.getLogger()->log("------ Server Response sent to client ------\n\n");
         }
         else
         {
-            m_logger->error("Error sending response to client");
+            m_registry.getLogger()->error("Error sending response to client");
         }
     }
 } // namespace http

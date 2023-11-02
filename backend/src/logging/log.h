@@ -24,6 +24,8 @@ namespace logging
         void log(const char* message) const;
         void debug(const char* message) const;
 
+        void changeLogLevel(LogLevel level);
+
       private:
         LogHandler* m_handler;
         LogLevel m_level;

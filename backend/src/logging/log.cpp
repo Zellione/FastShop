@@ -1,5 +1,7 @@
 #include "log.h"
 #include "log_handler_interface.h"
+#include <functional>
+#include <iostream>
 
 namespace logging
 {
@@ -46,4 +48,10 @@ namespace logging
 
         m_handler->log(LOGLEVEL_DEBUG, message);
     }
-} // namespace logging
+
+    void Log::changeLogLevel(LogLevel level)
+    {
+        m_level = level;
+    }
+
+} // namespace log

@@ -59,4 +59,9 @@ namespace http
     {
         return &m_body;
     }
+
+    const std::string* HttpRequest::GetPath() const
+    {
+        return &m_path;
+    }
 } // namespace http

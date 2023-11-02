@@ -5,11 +5,12 @@
 namespace http
 {
     HttpResponse::HttpResponse()
-        : m_protocol(),
-          m_code(),
+        : m_protocol(http::HTTP_VERSION_1_1),
+          m_code(Code::OK),
           m_body(),
           m_headers()
     {
+        addHeader("Content-Type", "text/html");
     }
 
     HttpResponse::~HttpResponse()
