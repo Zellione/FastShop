@@ -13,7 +13,7 @@ namespace router
           m_controllers(new Controller*[m_maxRoutes])
     {
         m_controllers[0] = baseRoute;
-        m_numOfRoutes = 1;
+        m_numOfRoutes    = 1;
     }
 
     Router::~Router()
@@ -28,7 +28,7 @@ namespace router
         Controller* current = 0;
         for (int i = 0; i < m_numOfRoutes; i++)
         {
-            if (!m_controllers[i]->satisfies(request->GetPath()->c_str()))
+            if (!m_controllers[i]->satisfies(request))
             {
                 continue;
             }
@@ -36,13 +36,19 @@ namespace router
             current = m_controllers[i];
             break;
         }
-        assert(current != 0);
-        current->routes();
-        http::HttpResponse* response = new http::HttpResponse();
-        response->setBody(
-            "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p></body></html>");
+        if (current == 0)
+            return responseNotFound();
 
-        return response;
+        return current->routes()->route(request);
     }
+
+    http::HttpResponse* Router::responseNotFound() const
+    {
+        return (new http::HttpResponse())
+            ->setCode(http::Code::NotFound)
+            ->setProtocol(http::HTTP_VERSION_1_1)
+            ->setBody("Cannot find content path");
+    }
+
 } // namespace router
 } // namespace shop

@@ -1,5 +1,14 @@
 #pragma once
 
+#include "../../http/http_request.h"
+#include "../../http/http_response.h"
+#include <functional>
+
+namespace router
+{
+class Controller;
+}
+
 namespace shop
 {
 namespace router
@@ -7,6 +16,7 @@ namespace router
     struct Route
     {
         char name[100];
+        std::function<http::HttpResponse*(const http::HttpRequest*)> function;
     };
 
     class Routes
@@ -17,7 +27,8 @@ namespace router
         ~Routes();
 
         void add(Route* route);
-        bool satisfies(const char* path) const;
+        bool satisfies(const http::HttpRequest* request) const;
+        http::HttpResponse* route(const http::HttpRequest* request) const;
 
       private:
         bool hasEnoughSpace() const;

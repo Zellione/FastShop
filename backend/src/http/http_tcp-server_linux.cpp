@@ -24,7 +24,6 @@ namespace http
           m_incomingMessage(),
           m_socketAddress(),
           m_socketAddressLength(sizeof(m_socketAddress)),
-          m_serverMessage(buildResponse()),
           m_registry()
     {
         m_socketAddress.sin_family      = AF_INET;
@@ -61,19 +60,6 @@ namespace http
         }
 
         return 0;
-    }
-
-    std::string TcpServer::buildResponse()
-    {
-        http::HttpResponse response;
-        std::string htmlFile =
-            "<!DOCTYPE html><html lang=\"en\"><body><h1> HOME </h1><p> Hello from your Server :) </p></body></html>";
-        response.setBody(htmlFile)
-            ->setCode(http::Code::OK)
-            ->setProtocol(http::HTTP_VERSION_1_1)
-            ->addHeader("Content-Type", "text/html");
-
-        return response.toString();
     }
 
     void TcpServer::closeServer()
@@ -117,7 +103,7 @@ namespace http
             m_registry.getLogger()->debug(buffer);
 
             http::HttpResponse* response =  m_registry.getRouter()->route(request);
-            sendResponse();
+            sendResponse(response);
 
             delete request;
             delete response;
@@ -137,13 +123,14 @@ namespace http
         }
     }
 
-    void TcpServer::sendResponse()
+    void TcpServer::sendResponse(http::HttpResponse* response)
     {
         size_t bytesSent;
 
-        bytesSent = write(m_newSocket, m_serverMessage.c_str(), m_serverMessage.size());
+        std::string responseMessage = response->toString();
+        bytesSent = write(m_newSocket, responseMessage.c_str(), responseMessage.size());
 
-        if (bytesSent == m_serverMessage.size())
+        if (bytesSent == responseMessage.size())
         {
             m_registry.getLogger()->log("------ Server Response sent to client ------\n\n");
         }

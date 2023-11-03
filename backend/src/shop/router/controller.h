@@ -20,10 +20,11 @@ namespace router
             delete m_routes;
         };
 
-        virtual bool satisfies(const char* route)
+        virtual bool satisfies(const http::HttpRequest* request)
         {
-            return m_routes->satisfies(route);
+            return m_routes->satisfies(request);
         };
+
 
         const Routes* routes()
         {

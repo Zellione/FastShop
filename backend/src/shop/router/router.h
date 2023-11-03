@@ -1,8 +1,8 @@
 #pragma once
 
+#include "../../http/http_request.h"
 #include "../../http/http_response.h"
 #include "controller.h"
-#include "../../http/http_request.h"
 
 namespace shop
 {
@@ -16,6 +16,9 @@ namespace router
         ~Router();
 
         http::HttpResponse* route(http::HttpRequest* request) const;
+
+      private:
+        http::HttpResponse* responseNotFound() const;
 
       private:
         int m_numOfRoutes;

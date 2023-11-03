@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../service/registry.h"
+#include "http_response.h"
 #include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,15 +26,13 @@ namespace http
         long m_incomingMessage;
         sockaddr_in m_socketAddress;
         unsigned int m_socketAddressLength;
-        std::string m_serverMessage;
 
         service::Registry m_registry;
 
       private:
         int startServer();
         void closeServer();
-        std::string buildResponse();
         void acceptConnection(int& newSocket);
-        void sendResponse();
+        void sendResponse(http::HttpResponse* response);
     };
 } // namespace http
