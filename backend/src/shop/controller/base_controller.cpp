@@ -1,4 +1,5 @@
 #include "base_controller.h"
+#include "../../../lib/json/include/parser.h"
 #include <cstdio>
 
 namespace shop
@@ -21,6 +22,10 @@ namespace controller
 
     http::HttpResponse* BaseController::indexAction(const http::HttpRequest* request) const
     {
+        json::Parser* jsonParser = new json::Parser("filename.json");
+        jsonParser->parse();
+        delete jsonParser;
+
         return (new http::HttpResponse())
             ->setCode(http::Code::OK)
             ->setProtocol(http::HTTP_VERSION_1_1)
