@@ -12,7 +12,7 @@ dap.configurations.cpp = {
     type = 'lldb',
     request = 'launch',
     program = vim.fn.getcwd() .. '/backend/build/default/FastShop',
-    cwd = '${workspaceFolder}',
+    cwd = '${workspaceFolder}/backend/build/default',
     stopOnEntry = false,
     args = {},
   },

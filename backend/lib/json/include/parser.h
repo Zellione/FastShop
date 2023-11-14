@@ -1,6 +1,7 @@
 #pragma once
 
 #include "json_node.h"
+#include "serializable.h"
 #include "tokenizer.h"
 #include <fstream>
 #include <memory>
@@ -15,17 +16,17 @@ class Parser
       Parser(const Parser &other) = delete;
       ~Parser();
 
-      void parse();
-      std::shared_ptr<json::JSONNode> parseObject();
-      std::shared_ptr<json::JSONNode> parseString();
-      std::shared_ptr<json::JSONNode> parseNumber();
-      std::shared_ptr<json::JSONNode> parseList();
-      std::shared_ptr<json::JSONNode> parseBoolean();
-      std::shared_ptr<json::JSONNode> parseNull();
+      void parse(Serializable* obj);
+      std::shared_ptr<JSONNode> parseObject();
+      std::shared_ptr<JSONNode> parseString();
+      std::shared_ptr<JSONNode> parseNumber();
+      std::shared_ptr<JSONNode> parseList();
+      std::shared_ptr<JSONNode> parseBoolean();
+      std::shared_ptr<JSONNode> parseNull();
   private:
     std::fstream file;
-    std::shared_ptr<json::JSONNode> root;
-    std::unique_ptr<json::JSONNode> current;
+    std::shared_ptr<JSONNode> root;
+    std::unique_ptr<JSONNode> current;
     Tokenizer tokenizer;
 };
 } // namespace json

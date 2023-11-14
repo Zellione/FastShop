@@ -16,7 +16,8 @@ enum class TOKEN
     ARRAY_CLOSE,
     COMMA,
     BOOLEAN,
-    NULL_TYPE
+    NULL_TYPE,
+    END_OF_FILE
 };
 
 struct Token
@@ -58,6 +59,9 @@ struct Token
         case TOKEN::NULL_TYPE: {
             return "null";
         }
+        case TOKEN::END_OF_FILE: {
+            return "end of file";
+        }
         }
 
         return "";
@@ -66,18 +70,18 @@ struct Token
 
 class Tokenizer
 {
-    public:
-        Tokenizer(std::string fileName);
-        Tokenizer(const Tokenizer &other) = delete;
-        ~Tokenizer();
+  public:
+    Tokenizer(std::string fileName);
+    Tokenizer(const Tokenizer& other) = delete;
+    ~Tokenizer();
 
-        char getWithoutWhiteSpace();
-        Token getToken();
-        bool hasMoreTokens() const;
-        void rollBackToken() ;
+    char getWithoutWhiteSpace();
+    Token getToken();
+    bool hasMoreTokens() const;
+    void rollBackToken();
 
-    private:
-        std::fstream file;
-        size_t prevPos;
+  private:
+    std::fstream file;
+    size_t prevPos;
 };
 } // namespace json

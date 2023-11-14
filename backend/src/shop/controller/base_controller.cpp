@@ -1,6 +1,8 @@
 #include "base_controller.h"
+#include "../model/product.h"
 #include "../../../lib/json/include/parser.h"
 #include <cstdio>
+#include <unistd.h>
 
 namespace shop
 {
@@ -22,9 +24,13 @@ namespace controller
 
     http::HttpResponse* BaseController::indexAction(const http::HttpRequest* request) const
     {
-        json::Parser* jsonParser = new json::Parser("filename.json");
-        jsonParser->parse();
+        char cwd[256];
+        getcwd(cwd, 256);
+        model::Product* product = new model::Product();
+        json::Parser* jsonParser = new json::Parser(std::string(cwd) + "/../../asset/json/product/product.json");
+        jsonParser->parse(product);
         delete jsonParser;
+        delete product;
 
         return (new http::HttpResponse())
             ->setCode(http::Code::OK)

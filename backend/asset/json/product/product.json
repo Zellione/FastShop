@@ -1,4 +1,8 @@
 {
-    "id": 1,
-    "test": "test"
+    "product": {
+        "id": 123123,
+        "is_server": false,
+        "name": "Josef",
+        "price": 12.34
+    }
 }

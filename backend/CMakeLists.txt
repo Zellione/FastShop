@@ -11,7 +11,7 @@ file (GLOB_RECURSE source_files "${source_dir}/*.cpp")
 message(STATUS "source_files=${source_files}")
 
 set(JSON_SOURCE_FILES "${json_source_dir}/src/json_node.cpp" "${json_source_dir}/src/tokenizer.cpp" "${json_source_dir}/src/parser.cpp")
-set(JSON_HEADER_FILES "${json_source_dir}/include/json_node.h" "${json_source_dir}/include/tokenizer.h" "${json_source_dir}/include/parser.h")
+set(JSON_HEADER_FILES "${json_source_dir}/include/json_node.h" "${json_source_dir}/include/tokenizer.h" "${json_source_dir}/include/parser.h" "${json_source_dir}/include/serializable.h")
 
 add_library(JSONParser STATIC ${JSON_HEADER_FILES} ${JSON_SOURCE_FILES})
 

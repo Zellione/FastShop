@@ -9,11 +9,15 @@ Tokenizer::Tokenizer(std::string fileName)
 {
     file.open(fileName, std::ios::in);
     if (!file.good())
+    {
         std::cout << "File open error" << std::endl;
+        throw std::logic_error("File open error");
+    }
 }
 
 Tokenizer::~Tokenizer()
 {
+    file.close();
 }
 
 char Tokenizer::getWithoutWhiteSpace()
@@ -22,14 +26,16 @@ char Tokenizer::getWithoutWhiteSpace()
     while ((c == ' ' || c == '\n'))
     {
         file.get(c);
-
         if ((c == ' ' || c == '\n') && !file.good())
         {
-            throw std::logic_error("Ran out of tokens");
+            /* throw std::logic_error("Ran out of tokens (getWithoutWhiteSpace)"); */
+            return '\0';
         }
 
         if (!file.good())
+        {
             return c;
+        }
     }
 
     return c;
@@ -38,12 +44,21 @@ char Tokenizer::getWithoutWhiteSpace()
 Token Tokenizer::getToken()
 {
     if (file.eof())
-        std::cout << "Exhausted tokens" << std::endl;
+    {
+        std::cout << "Exhausted tokens (getToken)" << std::endl;
+    }
     prevPos = file.tellg();
     char c  = getWithoutWhiteSpace();
 
-    std::cout << c << std::endl;
     struct Token token;
+    if (c == '\0')
+    {
+        token.type  = TOKEN::END_OF_FILE;
+        token.value = "";
+
+        return token;
+    }
+
     if (c == '"')
     {
         token.type  = TOKEN::STRING;
@@ -69,7 +84,7 @@ Token Tokenizer::getToken()
         return token;
     }
 
-    if (c == '-' || (c >= '0' && c <= 9))
+    if (c == '-' || (c >= '0' && c <= '9'))
     {
         token.type  = TOKEN::NUMBER;
         token.value = "";
@@ -149,7 +164,9 @@ bool Tokenizer::hasMoreTokens() const
 void Tokenizer::rollBackToken()
 {
     if (file.eof())
+    {
         file.clear();
+    }
 
     file.seekg(prevPos);
 }

@@ -8,13 +8,14 @@ namespace json
 Parser::Parser(const std::string filename)
     : tokenizer(filename)
 {
+    std::cout << filename << std::endl;
 }
 
 Parser::~Parser()
 {
 }
 
-void Parser::parse()
+void Parser::parse(Serializable* obj)
 {
     std::string key = "";
     while (tokenizer.hasMoreTokens())
@@ -23,12 +24,11 @@ void Parser::parse()
         try
         {
             token = tokenizer.getToken();
-            std::cout << token.toString() << std::endl;
             switch (token.type)
             {
             case TOKEN::CURLY_OPEN: {
                 std::shared_ptr<json::JSONNode> parsedObject = parseObject();
-                parsedObject->printNode(0);
+                /* parsedObject->printNode(0); */
                 if (!root)
                     root = parsedObject;
                 break;
@@ -69,11 +69,12 @@ void Parser::parse()
             std::cout << e->what() << std::endl;
         }
     }
+
+    obj->deserialize(root);
 }
 
 std::shared_ptr<json::JSONNode> Parser::parseObject()
 {
-    std::cout << "Parsing object " << std::endl;
     std::shared_ptr<json::JSONNode> node = std::make_shared<json::JSONNode>();
     json::JSONObject* keyObjectMap       = new json::JSONObject();
     bool hasCompleted                    = false;
@@ -87,8 +88,8 @@ std::shared_ptr<json::JSONNode> Parser::parseObject()
         Token nextToken = tokenizer.getToken();
         std::string key = nextToken.value;
         std::cout << key << std::endl;
-        tokenizer.getToken();
         nextToken = tokenizer.getToken();
+        std::cout << nextToken.toString() << std::endl;
         std::shared_ptr<JSONNode> node;
         switch (nextToken.type)
         {
@@ -119,6 +120,10 @@ std::shared_ptr<json::JSONNode> Parser::parseObject()
             (*keyObjectMap)[key] = parseNull();
             break;
         }
+        case TOKEN::CURLY_CLOSE: {
+            hasCompleted = true;
+            break;
+        }
         default:
             break;
         }
@@ -131,7 +136,6 @@ std::shared_ptr<json::JSONNode> Parser::parseObject()
 
 std::shared_ptr<json::JSONNode> Parser::parseString()
 {
-    std::cout << "Parsing String" << std::endl;
     std::shared_ptr<JSONNode> node = std::make_shared<JSONNode>();
     Token token                    = tokenizer.getToken();
     std::string* sValue            = new std::string(token.value);
@@ -142,7 +146,6 @@ std::shared_ptr<json::JSONNode> Parser::parseString()
 
 std::shared_ptr<json::JSONNode> Parser::parseNumber()
 {
-    std::cout << "Parsing Number" << std::endl;
     std::shared_ptr<JSONNode> node = std::make_shared<JSONNode>();
     Token nextToken                = tokenizer.getToken();
     std::string value              = nextToken.value;
@@ -155,7 +158,6 @@ std::shared_ptr<json::JSONNode> Parser::parseNumber()
 
 std::shared_ptr<json::JSONNode> Parser::parseList()
 {
-    std::cout << "Parsing List" << std::endl;
     std::shared_ptr<JSONNode> node = std::make_shared<JSONNode>();
     JSONList* list                 = new JSONList();
     bool hasCompleted              = false;
@@ -211,7 +213,6 @@ std::shared_ptr<json::JSONNode> Parser::parseList()
 
 std::shared_ptr<json::JSONNode> Parser::parseBoolean()
 {
-    std::cout << "Parsing boolean" << std::endl;
     std::shared_ptr<JSONNode> node = std::make_shared<JSONNode>();
     Token nextToken                = tokenizer.getToken();
     node->setBoolean(nextToken.value == "True" ? true : false);
@@ -221,7 +222,6 @@ std::shared_ptr<json::JSONNode> Parser::parseBoolean()
 
 std::shared_ptr<json::JSONNode> Parser::parseNull()
 {
-    std::cout << "Parsing null" << std::endl;
     std::shared_ptr<JSONNode> node = std::make_shared<JSONNode>();
     node->setNull();
 
