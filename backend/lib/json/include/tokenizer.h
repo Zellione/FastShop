@@ -64,7 +64,7 @@ struct Token
         }
         }
 
-        return "";
+        return "unknown token type";
     }
 };
 

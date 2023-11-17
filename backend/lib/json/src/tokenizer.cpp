@@ -28,7 +28,6 @@ char Tokenizer::getWithoutWhiteSpace()
         file.get(c);
         if ((c == ' ' || c == '\n') && !file.good())
         {
-            /* throw std::logic_error("Ran out of tokens (getWithoutWhiteSpace)"); */
             return '\0';
         }
 

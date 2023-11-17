@@ -18,7 +18,8 @@ namespace model
       private:
         int id;
         std::string name;
-        bool is_available;
+        bool available;
+        float price;
     };
 } // namespace model
 } // namespace shop

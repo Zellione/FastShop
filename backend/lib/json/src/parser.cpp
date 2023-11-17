@@ -17,7 +17,7 @@ Parser::~Parser()
 
 void Parser::parse(Serializable* obj)
 {
-    std::string key = "";
+    std::string key = "root";
     while (tokenizer.hasMoreTokens())
     {
         Token token;
@@ -28,7 +28,6 @@ void Parser::parse(Serializable* obj)
             {
             case TOKEN::CURLY_OPEN: {
                 std::shared_ptr<json::JSONNode> parsedObject = parseObject();
-                /* parsedObject->printNode(0); */
                 if (!root)
                     root = parsedObject;
                 break;
@@ -87,9 +86,9 @@ std::shared_ptr<json::JSONNode> Parser::parseObject()
 
         Token nextToken = tokenizer.getToken();
         std::string key = nextToken.value;
-        std::cout << key << std::endl;
+        tokenizer.getToken();
         nextToken = tokenizer.getToken();
-        std::cout << nextToken.toString() << std::endl;
+
         std::shared_ptr<JSONNode> node;
         switch (nextToken.type)
         {
@@ -127,6 +126,13 @@ std::shared_ptr<json::JSONNode> Parser::parseObject()
         default:
             break;
         }
+
+        nextToken = tokenizer.getToken();
+        if (nextToken.type == TOKEN::CURLY_CLOSE)
+        {
+            hasCompleted = true;
+            continue;
+        }
     }
 
     node->setObject(keyObjectMap);
@@ -149,8 +155,7 @@ std::shared_ptr<json::JSONNode> Parser::parseNumber()
     std::shared_ptr<JSONNode> node = std::make_shared<JSONNode>();
     Token nextToken                = tokenizer.getToken();
     std::string value              = nextToken.value;
-    std::cout << value << std::endl;
-    float fValue = std::stof(value);
+    float fValue                   = std::stof(value);
     node->setNumber(fValue);
 
     return node;

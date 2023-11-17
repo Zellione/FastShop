@@ -35,10 +35,12 @@ JSONList* JSONNode::returnList() const
     throw std::logic_error("Improper return");
 }
 
-std::string* JSONNode::returnString() const
+std::string JSONNode::returnString() const
 {
     if (type == Type::STRING)
-        return values.s;
+    {
+        return *values.s;
+    }
 
     throw std::logic_error("Improper return");
 }
@@ -155,5 +157,31 @@ std::string JSONNode::toString(int indentationLevel)
 void JSONNode::printNode(int indentationLevel)
 {
     std::cout << toString(indentationLevel);
+}
+
+JSONNode::Type JSONNode::getType() const
+{
+    return type;
+}
+
+std::string JSONNode::getTypeAsString() const
+{
+    switch (type)
+    {
+        case Type::LIST:
+            return "LIST";
+        case Type::NUMBER:
+            return "NUMBER";
+        case Type::OBJECT:
+            return "OBJECT";
+        case Type::STRING:
+            return "STRING";
+        case Type::BOOLEAN:
+            return "BOOL";
+        case Type::NULL_TYPE:
+            return "NULL";
+    }
+
+    return "UNKNOWN";
 }
 } // namespace json

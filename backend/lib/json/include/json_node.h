@@ -32,7 +32,7 @@ class JSONNode
 
     JSONObject* returnObject() const;
     JSONList* returnList() const;
-    std::string* returnString() const;
+    std::string returnString() const;
     float returnFloat() const;
     bool returnBoolean() const;
 
@@ -42,6 +42,9 @@ class JSONNode
     void setList(JSONList* list);
     void setBoolean(bool b);
     void setNull();
+
+    JSONNode::Type getType() const;
+    std::string getTypeAsString() const;
 
     std::string toString(int indentationLevel);
     void printNode(int indentationLevel);

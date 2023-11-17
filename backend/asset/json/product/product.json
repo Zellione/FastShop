@@ -1,8 +1,8 @@
 {
     "product": {
-        "id": 123123,
-        "is_server": false,
-        "name": "Josef",
+        "id": 1,
+        "available": false,
+        "name": "Example Product",
         "price": 12.34
     }
 }

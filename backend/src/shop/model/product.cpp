@@ -8,7 +8,8 @@ namespace model
     Product::Product()
         : id(0),
           name(""),
-          is_available(false)
+          available(false),
+          price(0.00)
     {
     }
 
@@ -18,10 +19,33 @@ namespace model
 
     void Product::deserialize(std::shared_ptr<json::JSONNode> node)
     {
-        auto test = *node->returnObject();
-        for (auto i = test.begin(); i != test.end(); i++)
+        auto root = node->returnObject();
+        auto product = root->begin()->second->returnObject();
+        for (auto i = product->begin(); i != product->end(); i++)
         {
-            std::cout << "Key: " << i->first << " Value: " << i->second << std::endl;
+            if (i->first.compare("id") == 0)
+            {
+                id = (int)i->second->returnFloat();
+                continue;
+            }
+
+            if (i->first.compare("name") == 0)
+            {
+                name = i->second->returnString();
+                continue;
+            }
+
+            if (i->first.compare("available") == 0)
+            {
+                available = i->second->returnBoolean();
+                continue;
+            }
+
+            if (i->first.compare("price") == 0)
+            {
+                price = i->second->returnFloat();
+                continue;
+            }
         }
     }
 } // namespace model
