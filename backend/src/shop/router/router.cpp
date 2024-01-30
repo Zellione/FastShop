@@ -1,7 +1,6 @@
 #include "router.h"
-#include "controller.h"
-
-#include <cassert>
+#include "../controller/admin_controller.h"
+#include "../controller/user_controller.h"
 
 namespace shop
 {
@@ -14,6 +13,8 @@ namespace router
     {
         m_controllers[0] = baseRoute;
         m_numOfRoutes    = 1;
+
+        registerRoutes();
     }
 
     Router::~Router()
@@ -48,6 +49,21 @@ namespace router
             ->setCode(http::Code::NotFound)
             ->setProtocol(http::HTTP_VERSION_1_1)
             ->setBody("Cannot find content path");
+    }
+
+    void Router::registerRoute(Controller* controller)
+    {
+        if (m_numOfRoutes < m_maxRoutes)
+        {
+            m_controllers[m_numOfRoutes] = controller;
+            m_numOfRoutes++;
+        }
+    }
+
+    void Router::registerRoutes()
+    {
+        registerRoute(new controller::UserController());
+        registerRoute(new controller::AdminController());
     }
 
 } // namespace router

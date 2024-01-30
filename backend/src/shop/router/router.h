@@ -17,8 +17,11 @@ namespace router
 
         http::HttpResponse* route(http::HttpRequest* request) const;
 
+        void registerRoute(Controller* controller);
+
       private:
         http::HttpResponse* responseNotFound() const;
+        void registerRoutes();
 
       private:
         int m_numOfRoutes;

@@ -15,6 +15,9 @@ namespace http
 
         HttpResponse* addHeader(std::string name, std::string value);
         const std::map<std::string, std::string>& getHeaders() const;
+        const std::string& getHeader(const std::string& name) const;
+        bool hasHeader(const std::string& name) const;
+        void stripHeader(const std::string& name);
 
         HttpResponse* setCode(Code code);
         Code getCode() const;

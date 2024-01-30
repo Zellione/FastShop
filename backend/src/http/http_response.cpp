@@ -29,6 +29,21 @@ namespace http
         return m_headers;
     }
 
+    const std::string& HttpResponse::getHeader(const std::string& name) const
+    {
+        return m_headers.at(name);
+    }
+
+    void HttpResponse::stripHeader(const std::string& name)
+    {
+        m_headers.erase(name);
+    }
+
+    bool HttpResponse::hasHeader(const std::string& name) const
+    {
+        return m_headers.find(name) != m_headers.end();
+    }
+
     HttpResponse* HttpResponse::setCode(Code code)
     {
         m_code = code;

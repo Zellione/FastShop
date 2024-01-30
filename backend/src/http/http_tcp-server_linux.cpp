@@ -1,5 +1,4 @@
 #include "http_tcp-server_linux.h"
-#include "http_common.h"
 #include "http_request.h"
 #include "http_response.h"
 
@@ -9,8 +8,6 @@
 #include <sstream>
 #include <sys/socket.h>
 #include <unistd.h>
-
-#include "../logging/log_handler_console.h"
 
 namespace http
 {
@@ -66,7 +63,6 @@ namespace http
     {
         close(m_socket);
         close(m_newSocket);
-        exit(0);
     }
 
     void TcpServer::startListen()
@@ -82,8 +78,9 @@ namespace http
         m_registry.getLogger()->log(ss.str().c_str());
 
         int bytesReceived;
+        bool running = true;
 
-        while (true)
+        while (running)
         {
             m_registry.getLogger()->log("====== Waiting for a new connection ====== \n\n\n");
             acceptConnection(m_newSocket);
@@ -92,7 +89,7 @@ namespace http
             bytesReceived            = read(m_newSocket, buffer, BUFFER_SIZE);
             if (bytesReceived < 0)
             {
-                m_registry.getLogger()->error("Failed to read bytes from client  socket connection");
+                m_registry.getLogger()->error("Failed to read bytes from client socket connection");
             }
             http::HttpRequest* request = new http::HttpRequest(buffer);
             m_registry.getLogger()->debug(request->GetBody()->c_str());
@@ -103,6 +100,11 @@ namespace http
             m_registry.getLogger()->debug(buffer);
 
             http::HttpResponse* response =  m_registry.getRouter()->route(request);
+            if (response->hasHeader("Quitting"))
+            {
+                running = false;
+                response->stripHeader("Quitting");
+            }
             sendResponse(response);
 
             delete request;
