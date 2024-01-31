@@ -17,6 +17,23 @@ JSONNode::JSONNode(Type t)
 
 JSONNode::~JSONNode()
 {
+    switch (type)
+    {
+    /* case Type::OBJECT: { */
+    /*     delete values.object; */
+    /* } */
+    /* break; */
+    /* case Type::LIST: { */
+    /*     delete values.list; */
+    /* } */
+    /* break; */
+    /* case Type::STRING: { */
+    /*     delete values.s; */
+    /* } */
+    break;
+    default:
+        break;
+    }
 }
 
 JSONObject* JSONNode::returnObject() const
@@ -103,7 +120,7 @@ std::string JSONNode::toString(int indentationLevel)
     switch (type)
     {
     case Type::STRING: {
-        ss << spaceString << *values.s;
+        ss << spaceString << "\"" << *values.s << "\"";
         break;
     }
     case Type::NUMBER: {
@@ -136,7 +153,7 @@ std::string JSONNode::toString(int indentationLevel)
         ss << "{\n";
         for (JSONObject::iterator i = (*values.object).begin(); i != (*values.object).end(); i++)
         {
-            ss << spaceString << i->first << ": ";
+            ss << spaceString << "\"" << i->first << "\":";
             ss << i->second->toString(indentationLevel + 1);
             JSONObject::iterator next = i;
             next++;
@@ -148,8 +165,6 @@ std::string JSONNode::toString(int indentationLevel)
         break;
     }
     }
-
-    ss << "}\n";
 
     return ss.str();
 }
@@ -168,18 +183,18 @@ std::string JSONNode::getTypeAsString() const
 {
     switch (type)
     {
-        case Type::LIST:
-            return "LIST";
-        case Type::NUMBER:
-            return "NUMBER";
-        case Type::OBJECT:
-            return "OBJECT";
-        case Type::STRING:
-            return "STRING";
-        case Type::BOOLEAN:
-            return "BOOL";
-        case Type::NULL_TYPE:
-            return "NULL";
+    case Type::LIST:
+        return "LIST";
+    case Type::NUMBER:
+        return "NUMBER";
+    case Type::OBJECT:
+        return "OBJECT";
+    case Type::STRING:
+        return "STRING";
+    case Type::BOOLEAN:
+        return "BOOL";
+    case Type::NULL_TYPE:
+        return "NULL";
     }
 
     return "UNKNOWN";

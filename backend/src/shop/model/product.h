@@ -15,6 +15,7 @@ namespace model
         ~Product();
 
         void deserialize(std::shared_ptr<json::JSONNode> node) override;
+        std::shared_ptr<json::JSONNode> serialize() override;
       private:
         int id;
         std::string name;
