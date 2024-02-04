@@ -13,6 +13,14 @@ namespace model
     {
     }
 
+    Product::Product(const Product& other)
+    {
+        id = other.id;
+        name = std::string(other.name);
+        available = other.available;
+        price = other.price;
+    }
+
     Product::~Product()
     {
     }
@@ -20,8 +28,7 @@ namespace model
     void Product::deserialize(std::shared_ptr<json::JSONNode> node)
     {
         auto root = node->returnObject();
-        auto product = root->begin()->second->returnObject();
-        for (auto i = product->begin(); i != product->end(); i++)
+        for (auto i = root->begin(); i != root->end(); i++)
         {
             if (i->first.compare("id") == 0)
             {

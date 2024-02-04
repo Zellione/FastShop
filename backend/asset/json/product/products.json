@@ -1,0 +1,33 @@
+{
+    "products": [{
+        "id": 1,
+        "available": false,
+        "name": "Example Product",
+        "price": 12.34
+    },{
+        "id": 2,
+        "available": false,
+        "name": "Example Product 2",
+        "price": 11.95
+    },{
+        "id": 3,
+        "available": false,
+        "name": "Example Product 3",
+        "price": 78.99
+    },{
+        "id": 4,
+        "available": false,
+        "name": "Example Product 4",
+        "price": 0.99
+    },{
+        "id": 5,
+        "available": false,
+        "name": "Example Product 5",
+        "price": 42.34
+    },{
+        "id": 6,
+        "available": false,
+        "name": "Example Product 6",
+        "price": 122.34
+    }]
+}

@@ -14,6 +14,7 @@ namespace controller
         ~ProductController();
 
         http::HttpResponse* getAction(const http::HttpRequest* request) const;
+        http::HttpResponse* getAllAction(const http::HttpRequest* request) const;
 
       private:
     };

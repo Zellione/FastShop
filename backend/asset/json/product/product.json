@@ -1,8 +1,6 @@
 {
-    "product": {
-        "id": 1,
-        "available": false,
-        "name": "Example Product",
-        "price": 12.34
-    }
+    "id": 1,
+    "available": false,
+    "name": "Example Product",
+    "price": 12.34
 }
