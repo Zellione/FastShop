@@ -8,7 +8,7 @@ namespace json
 Parser::Parser(const std::string filename)
     : tokenizer(filename)
 {
-    std::cout << filename << std::endl;
+    std::cout << "Parsing file: " << filename << std::endl;
 }
 
 Parser::~Parser()

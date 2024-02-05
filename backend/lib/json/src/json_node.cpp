@@ -8,28 +8,49 @@ namespace json
 {
 JSONNode::JSONNode()
 {
+    values = {nullptr};
 }
 
 JSONNode::JSONNode(Type t)
     : type(t)
 {
+    switch (type)
+    {
+    case Type::OBJECT: {
+        values.object = nullptr;
+    }
+    break;
+    case Type::LIST: {
+        values.list = nullptr;
+    }
+    break;
+    case Type::STRING: {
+        values.s = nullptr;
+    }
+    break;
+    default:
+        break;
+    }
 }
 
 JSONNode::~JSONNode()
 {
     switch (type)
     {
-    /* case Type::OBJECT: { */
-    /*     delete values.object; */
-    /* } */
-    /* break; */
-    /* case Type::LIST: { */
-    /*     delete values.list; */
-    /* } */
-    /* break; */
-    /* case Type::STRING: { */
-    /*     delete values.s; */
-    /* } */
+    case Type::OBJECT: {
+        delete values.object;
+        values.object = nullptr;
+    }
+    break;
+    case Type::LIST: {
+        delete values.list;
+        values.list = nullptr;
+    }
+    break;
+    case Type::STRING: {
+        delete values.s;
+        values.s = nullptr;
+    }
     break;
     default:
         break;

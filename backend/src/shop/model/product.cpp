@@ -62,7 +62,7 @@ namespace model
         auto object = new json::JSONObject();
 
         ((*object)["id"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::NUMBER))->setNumber(id);
-        ((*object)["name"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::STRING))->setString(&name);
+        ((*object)["name"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::STRING))->setString(new std::string(name));
         ((*object)["available"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::BOOLEAN))->setBoolean(available);
         ((*object)["price"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::NUMBER))->setNumber(price);
         root->setObject(object);
