@@ -19,6 +19,8 @@ namespace model
         std::shared_ptr<json::JSONNode> serialize() override;
         std::string createTable() override;
         std::string tableName() override;
+        bool save() override;
+        bool remove() override;
 
       private:
         int id;

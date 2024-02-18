@@ -19,5 +19,7 @@ public:
 
     virtual std::string createTable() = 0;
     virtual std::string tableName() = 0;
+    virtual bool save() = 0;
+    virtual bool remove() = 0;
 };
 }

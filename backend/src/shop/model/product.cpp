@@ -85,5 +85,15 @@ namespace model
     {
         return "product";
     }
+
+    bool Product::save()
+    {
+        return true;
+    }
+
+    bool Product::remove()
+    {
+        return true;
+    }
 } // namespace model
 } // namespace shop
