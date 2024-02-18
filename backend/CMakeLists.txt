@@ -17,5 +17,5 @@ add_library(JSONParser STATIC ${JSON_HEADER_FILES} ${JSON_SOURCE_FILES})
 
 add_executable (FastShop ${source_files})
 
-target_link_libraries(FastShop JSONParser)
+target_link_libraries(FastShop JSONParser sqlite3)
 # target_include_directories(FastShop PRIVATE ${FastShop_INCLUDE_DIRS})

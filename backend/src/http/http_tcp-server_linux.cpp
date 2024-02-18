@@ -99,6 +99,8 @@ namespace http
             m_registry.getLogger()->log(ss.str().c_str());
             m_registry.getLogger()->debug(buffer);
 
+            m_registry.getDatabase()->initializeDatabase();
+
             http::HttpResponse* response =  m_registry.getRouter()->route(request);
             if (response->hasHeader("Quitting"))
             {
