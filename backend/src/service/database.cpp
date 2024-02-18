@@ -50,7 +50,7 @@ void Database::initializeDatabase() const
     exit     = sqlite3_open("example.db", &db);
     char* errorMessage;
 
-    for (int i = 0; i < m_maxObjects; i++)
+    for (int i = 0; i < m_numOfObjects; i++)
     {
         service::ORM* orm = m_ormObjects[i];
         std::string sql   = orm->createTable();

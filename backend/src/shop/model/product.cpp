@@ -74,16 +74,16 @@ namespace model
 
     std::string Product::createTable()
     {
-        return "product";
-    }
-
-    std::string Product::tableName()
-    {
         return "CREATE TABLE PRODUCT ("
                "ID INT PRIMARY KEY   NOT NULL, "
                "NAME           TEXT  NOT NULL, "
                "AVAILABLE      INT   NOT NULL, "
                "PRICE          REAL  NOT NULL );";
+    }
+
+    std::string Product::tableName()
+    {
+        return "product";
     }
 } // namespace model
 } // namespace shop

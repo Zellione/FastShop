@@ -6,6 +6,8 @@
 int main(int argc, char* argv[])
 {
     service::Registry* registry = new service::Registry();
+    registry->init();
+
     if (argc > 1)
     {
         for (int i = 0; i < argc; i++)
@@ -15,10 +17,15 @@ int main(int argc, char* argv[])
                 registry->getDatabase()->initializeDatabase();
             }
         }
+
+        return 0;
     }
 
     http::TcpServer server("0.0.0.0", 8080, registry);
     server.startListen();
+
+    if (registry != nullptr)
+        delete registry;
 
     return 0;
 }
