@@ -1,6 +1,7 @@
 #include "registry.h"
 #include "../logging/log_handler_console.h"
 #include "../shop/controller/base_controller.h"
+#include "../shop/model/product.h"
 #include "database.h"
 
 namespace service
@@ -22,6 +23,11 @@ Registry::~Registry()
 
     delete m_database;
     m_database = 0;
+}
+
+void Registry::init()
+{
+    m_database->addModel(new shop::model::Product);
 }
 
 const logging::Log* Registry::getLogger() const

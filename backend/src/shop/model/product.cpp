@@ -15,10 +15,10 @@ namespace model
 
     Product::Product(const Product& other)
     {
-        id = other.id;
-        name = std::string(other.name);
+        id        = other.id;
+        name      = std::string(other.name);
         available = other.available;
-        price = other.price;
+        price     = other.price;
     }
 
     Product::~Product()
@@ -58,16 +58,32 @@ namespace model
 
     std::shared_ptr<json::JSONNode> Product::serialize()
     {
-        auto root = std::make_shared<json::JSONNode>(json::JSONNode::Type::OBJECT);
+        auto root   = std::make_shared<json::JSONNode>(json::JSONNode::Type::OBJECT);
         auto object = new json::JSONObject();
 
         ((*object)["id"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::NUMBER))->setNumber(id);
-        ((*object)["name"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::STRING))->setString(new std::string(name));
-        ((*object)["available"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::BOOLEAN))->setBoolean(available);
+        ((*object)["name"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::STRING))
+            ->setString(new std::string(name));
+        ((*object)["available"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::BOOLEAN))
+            ->setBoolean(available);
         ((*object)["price"] = std::make_shared<json::JSONNode>(json::JSONNode::Type::NUMBER))->setNumber(price);
         root->setObject(object);
 
         return root;
+    }
+
+    std::string Product::createTable()
+    {
+        return "product";
+    }
+
+    std::string Product::tableName()
+    {
+        return "CREATE TABLE PRODUCT ("
+               "ID INT PRIMARY KEY   NOT NULL, "
+               "NAME           TEXT  NOT NULL, "
+               "AVAILABLE      INT   NOT NULL, "
+               "PRICE          REAL  NOT NULL );";
     }
 } // namespace model
 } // namespace shop

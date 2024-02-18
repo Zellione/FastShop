@@ -13,6 +13,8 @@ namespace service
         Registry(const Registry& other) = delete;
         ~Registry();
 
+        void init();
+
         const logging::Log* getLogger() const;
         const shop::router::Router* getRouter() const;
         const service::Database* getDatabase() const;

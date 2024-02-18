@@ -1,6 +1,5 @@
 #include "database.h"
 #include "orm.h"
-#include <iostream>
 #include <string>
 
 namespace service

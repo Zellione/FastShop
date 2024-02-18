@@ -13,7 +13,7 @@ namespace http
     class TcpServer
     {
       public:
-        TcpServer(std::string ipAddress, int port);
+        TcpServer(std::string ipAddress, int port, service::Registry* registry);
         TcpServer(const TcpServer& other) = delete;
         ~TcpServer();
         void startListen();
@@ -27,7 +27,7 @@ namespace http
         sockaddr_in m_socketAddress;
         unsigned int m_socketAddressLength;
 
-        service::Registry m_registry;
+        service::Registry* m_registry;
 
       private:
         int startServer();
