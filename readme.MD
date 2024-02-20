@@ -15,8 +15,10 @@
 
 # TODO
 
-- read socket in seperate thread
+- remodel models to use inside struct
+- implement database initialization and bootstrap some data
 - finish database actions (save, load, remove)
+- read socket in seperate thread
 - implement product endpoint
 - implement category endpoint
 - implement homepage endpoint
