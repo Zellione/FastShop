@@ -2,6 +2,7 @@
 #include "../controller/admin_controller.h"
 #include "../controller/user_controller.h"
 #include "../controller/product_controller.h"
+#include "../controller/category_controller.h"
 
 namespace shop
 {
@@ -66,6 +67,7 @@ namespace router
         registerRoute(new controller::UserController());
         registerRoute(new controller::AdminController());
         registerRoute(new controller::ProductController());
+        registerRoute(new controller::CategoryController());
     }
 
 } // namespace router

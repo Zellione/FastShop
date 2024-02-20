@@ -42,7 +42,7 @@ namespace router
 
     http::HttpResponse* Routes::route(const http::HttpRequest* request) const
     {
-        http::HttpResponse* response = 0;
+        http::HttpResponse* response = nullptr;
         for (int i = 0; i < m_numOfRoutes; i++)
         {
             if (strcmp(m_routes[i]->name, request->GetPath()->c_str()) == 0)
@@ -51,7 +51,7 @@ namespace router
             }
         }
 
-        assert(response != 0);
+        assert(response != nullptr);
 
         return response;
     }
